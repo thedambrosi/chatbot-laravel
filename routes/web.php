@@ -12,7 +12,7 @@ Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name
 Route::view('/login', 'auth.login')->name('login');
 
 Route::get('/chat', function () {
-    return view('chat-temp');
+    return view('chat');
 })->middleware('auth')->name('chat');
 
 Route::post('/logout', function () {
