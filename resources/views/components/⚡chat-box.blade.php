@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
-
 new class extends Component {
     public string $body = '';
 
@@ -45,11 +44,15 @@ new class extends Component {
         ]);
 
         unset($this->messages);
+
+        $this->dispatch('message-sent');
     }
 }; ?>
 
 <div class="flex flex-1 flex-col overflow-hidden">
-    <div class="flex-1 space-y-6 overflow-y-auto py-8">
+    <div x-data
+        x-on:message-sent.window="$nextTick(() => $el.scrollTop = $el.scrollHeight)"
+        class="flex-1 space-y-6 overflow-y-auto py-8">
         @forelse ($this->messages as $message)
         @if ($message->role === 'user')
         <div class="flex justify-end">
@@ -78,6 +81,7 @@ new class extends Component {
         <form wire:submit="send" class="flex gap-3">
             <input type="text" wire:model="body" placeholder="Digite sua mensagem"
                 wire:loading.attr="disabled"
+                x-on:message-sent.window="$el.focus()"
                 class="flex-1 rounded-md border border-[#2A313F] bg-[#1A1F29] px-4 py-3 text-sm placeholder:text-[#8790A0] focus:border-[#7C9CF5] focus:outline-none disabled:opacity-50">
             <button type="submit" wire:loading.attr="disabled"
                 class="rounded-md bg-[#7C9CF5] px-5 text-sm font-medium text-[#11141B] transition hover:bg-[#95AEF7] disabled:opacity-50">
