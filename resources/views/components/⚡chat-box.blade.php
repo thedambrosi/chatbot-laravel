@@ -31,8 +31,10 @@ new class extends Component {
         $this->body = '';
         unset($this->messages);
 
+        $history = Auth::user()->messages()->latest()->limit(10)->get()->reverse();
+
         try {
-            $reply = (new ChatAssistant)->prompt($prompt)->text;
+            $reply = (new ChatAssistant($history))->prompt($prompt)->text;
         } catch (Throwable $e) {
             report($e);
             $reply = 'Desculpe, não consegui responder agora. Tente novamente.';
