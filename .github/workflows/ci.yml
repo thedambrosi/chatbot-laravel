@@ -27,6 +27,16 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
+      - name: Configura Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Compila assets
+        run: |
+          npm ci
+          npm run build
+
       - name: Verifica formatação
         run: php vendor/bin/pint --test
 
