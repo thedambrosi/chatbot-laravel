@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configura PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: sqlite3, pdo_sqlite
+
+      - name: Instala dependências
+        run: composer install --prefer-dist --no-interaction
+
+      - name: Prepara ambiente
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Verifica formatação
+        run: php vendor/bin/pint --test
+
+      - name: Executa testes
+        run: php vendor/bin/pest
