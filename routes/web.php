@@ -12,5 +12,12 @@ Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name
 Route::view('/login', 'auth.login')->name('login');
 
 Route::get('/chat', function () {
-    return 'Login funcionou! Olá, ' . auth()->user()->name;
+    return view('chat-temp');
 })->middleware('auth')->name('chat');
+
+Route::post('/logout', function () {
+    auth()->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect()->route('login');
+})->name('logout');
